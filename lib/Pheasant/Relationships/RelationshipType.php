@@ -31,6 +31,12 @@ class RelationshipType
             "Add not supported on ".get_class($this));
     }
 
+    public function join($table, $query, $joinType='innerJoin')
+    {
+        throw new \BadMethodCallException(
+            "Join not supported on ".get_class($this));
+    }
+
     /**
      * Delegates to the finder for querying
      * @return Query

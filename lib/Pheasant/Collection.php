@@ -25,6 +25,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         $this->_add = $add;
         $this->_schema = $schema = $class::schema();
         $this->_iterator = new QueryIterator($query, function($row) use ($schema) {
+            var_dump($row);
             return $schema->hydrate($row);
         });
     }
@@ -186,6 +187,27 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         $this->_readonly = true;
 
         return $this->_iterator;
+    }
+
+    /**
+     * Performs an inner join in the query and fetches a relationship
+     */
+    public function join($relationship)
+    {
+        $rels = $this->_schema->relationships();
+        $rel = $rels[$relationship]->type;
+
+        var_dump($rel);
+
+        // FIXME: is this the right place for this?
+        $table = \Pheasant::instance()->mapperFor($rel->class)->table();
+        $schema = \Pheasant::instance()->schema($rel->class);
+        $tableName = $table->name() . " ".$schema->classAlias();
+
+        $rel->join($tableName, $this->_queryForWrite());
+
+        var_dump((string)$this->_query);
+        return $this;
     }
 
     /**

@@ -43,6 +43,16 @@ class Schema
     }
 
     /**
+     * Just the basename of the class
+     * @return string
+     */
+    public function classAlias()
+    {
+        $classFragments = explode('\\', $this->_class);
+        return array_pop($classFragments);
+    }
+
+    /**
      * Returns an identity for a domain object
      * @return Identity
      */

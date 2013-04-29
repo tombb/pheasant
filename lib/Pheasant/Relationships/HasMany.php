@@ -40,4 +40,17 @@ class HasMany extends RelationshipType
 
         $value->set($this->foreign, $newValue);
     }
+
+    /* (non-phpdoc)
+     * @see RelationshipType::join()
+     */
+    public function join($table, $query, $joinType='innerJoin')
+    {
+        if($this->foreign == $this->local)
+            return $query->$joinType($table, "USING($this->foreign)");
+        else
+            return $query->$joinType($table, "ON {$this->foreign}={$this->local}");
+    }
+
+
 }
